@@ -5,16 +5,30 @@
 <html>
 <head>
   <style>
-    body {
+   body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f2f2f2;
+    }
+
+    .form-container {
+      width: 400px;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       font-size: 24px;
       margin-bottom: 10px;
+      text-align: center;
     }
-
     .form-group {
       margin-bottom: 20px;
     }
@@ -60,9 +74,10 @@
   </style>
 </head>
 <body>
-  <h1>Upload Document</h1>
+ <div class="form-container">
+    <h1>Upload Document</h1>
 
-  <form id="DocumentSave" method="post" enctype="multipart/form-data">
+  <form action="DocumentSave" method="POST" enctype="multipart/form-data">
     <div class="form-group">
       <label for="docname">Document Name:</label>
       <input type="text" id="docname" name="docname" required>
@@ -97,27 +112,25 @@
     form.addEventListener('submit', function(event) {
       event.preventDefault();
 
-      const docname = document.getElementById('docname').value;
+      const docName = document.getElementById('docName').value;
       const category = document.getElementById('category').value;
       const description = document.getElementById('description').value;
-      const fileInput = document.getElementById('file-upload');
-      const file = fileInput.files[0];
+      //const fileInput = document.getElementById('file-upload');
+ 	  //const file = fileInput.files[0];
 
-      if (!docname || !category || !file) {
+      if (!docName || !category || !file) {
         alert('Please fill in all the required fields and upload a document.');
         return;
       }
 
       const formData = new FormData();
-      formData.append('docname', docname);
+      formData.append('docName', docName);
       formData.append('category', category);
       formData.append('description', description);
-      formData.append('document', file);
-
-      // You can use AJAX or fetch API to send the form data to the server for processing
-      // Example using fetch API
-      fetch('/addReferenceDocument', {
-        method: 'GET',
+   //   formData.append('document', file);
+      
+      fetch('/DocumentSave', {
+        method: 'POST',
         body: formData
       })
       .then(response => {

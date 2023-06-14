@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -43,26 +42,38 @@
         </property>
     </bean>
 
-    <!-- SessionFactory configuration -->
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+ <!-- EntityManagerFactory configuration -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <property name="packagesToScan" value="main.Model" />
-        <property name="hibernateProperties" ref="hibernateProperties" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect" />
+                <property name="generateDdl" value="true" />
+                <property name="showSql" value="true" />
+            </bean>
+        </property>
+        <property name="jpaProperties" ref="hibernateProperties" />
     </bean>
-  
+	
     <!-- Dependency Injection Configuration -->
  
-   <bean id="rd" class="main.DAO.ReferenceDAO"></bean>
-   <bean id="rs" class="main.Service.ReferenceService"></bean>
+   <bean id="rd" class="main.DAO.ReferenceDAO" />
+   <bean id="rs" class="main.Service.ReferenceService" />
+   
+     
+    <!-- EntityManager configuration -->
+    <bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
     
 
-
-    <!-- Enable transactional support 
+    <!-- Enable transactional support -->
     <tx:annotation-driven transaction-manager="transactionManager" />
 
-    Configure the Hibernate transaction manager 
+  <!--   Configure the Hibernate transaction manager -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-    </bean>-->
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+</bean>
 
 </beans>

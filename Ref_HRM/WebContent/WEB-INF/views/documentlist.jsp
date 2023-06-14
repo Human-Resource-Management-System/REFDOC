@@ -66,22 +66,25 @@
 
 <div class="category" id="employee-handbook">
   <div class="category-title">Employee Handbook</div>
-   <%String m = "Employee Handbook";
-for(EmployeeRefDocuments doc : er) {
-    if(doc.getCategory().equals(m)) {%>
-    <div class="document">
-      <%= doc.getDocName() %>&nbsp;&nbsp;
-      <div class="document-link" onclick="openDocument('<%= doc.getDocName() %>')">View</div>&nbsp;&nbsp;
-      <div class="document-link" onclick="deleteDocument('<%= doc.getId() %>')">Delete</div>
-    </div>
-  <% }} %>
+  <% String m = "Employee Handbook";
+  for (EmployeeRefDocuments doc : er) {
+    if (doc != null && doc.getCategory().equals(m)) { %>
+      <div class="document">
+        <%= doc.getDocName() %>&nbsp;&nbsp;
+        <div class="document-link" onclick="openDocument('<%= doc.getDocName() %>')">View</div>&nbsp;&nbsp;
+        <div class="document-link" onclick="deleteDocument('<%= doc.getId() %>')">Delete</div>
+      </div>
+    <% } 
+  } %>
 </div>
+
+
 
 <div class="category" id="code-of-conduct">
   <div class="category-title">Code of Conduct</div>
  <%String n = "Code of Conduct";
 for(EmployeeRefDocuments doc : er) {
-    if(doc.getCategory().equals(n)) {%>
+    if(doc != null && doc.getCategory().equals(n)) {%>
     <div class="document">
       <%= doc.getDocName() %>&nbsp;&nbsp;
       <div class="document-link" onclick="openDocument('<%= doc.getDocName() %>')">View</div>&nbsp;&nbsp;
@@ -116,36 +119,25 @@ for(EmployeeRefDocuments doc : er) {
 	}
 
     function openDocument(documentPath) {
-    	  // Replace with your logic to open the document
     	  console.log('Opening document:', documentPath);
     	  window.location.href = '<%= imagePath %>' + documentPath;
     	}
 
     function deleteDocument(documentId) {
-    	  // Perform an AJAX request to delete the document
-    	  // Replace 'your-delete-endpoint' with the actual endpoint URL for deleting a document
-    	  // You may need to include additional logic or parameters based on your backend implementation
+    	  const form = document.createElement('form');
+    	  form.method = 'POST';
+    	  form.action = '/deleteReferenceDocument'; // Replace with the appropriate URL for your delete endpoint
 
-    	  fetch('/deleteReferenceDocument', {
-    	    method: 'GET',
-    	    headers: {
-    	      'Content-Type': 'application/json',
-    	    },
-    	    body: JSON.stringify({ documentId: documentId }),
-    	  })
-    	    .then((response) => response.json())
-    	    .then((data) => {
-    	      // Handle the response after deleting the document
-    	     // you can show a success message, update the UI, or refresh the document list
-    	      console.log('Document deleted:', data);
-    	      showMessage('Document deleted successfully.');
-    	      updateUI(documentId); 
-    	    })
-    	    .catch((error) => {
-    	      console.error('Error deleting document:', error); // Handle any errors that occur during the deletion process
-    	      showMessage('Error deleting document. Please try again.');
-    	    });
+    	  const documentIdInput = document.createElement('input');
+    	  documentIdInput.type = 'hidden';
+    	  documentIdInput.name = 'documentId';
+    	  documentIdInput.value = documentId;
+
+    	  form.appendChild(documentIdInput);
+    	  document.body.appendChild(form);
+    	  form.submit();
     	}
+
     function showMessage(message) {
     	  // Assuming you have a message element in your HTML, e.g., <div id="message"></div>
     	  const messageElement = document.getElementById('message');

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import main.Model.EmployeeRefDocuments;
 import main.Service.ReferenceService;
@@ -39,9 +40,9 @@ public class ReferenceController {
 	public String viewDocuments(Model model) {
 		List<EmployeeRefDocuments> document = rs.getAllDocuments();
 		model.addAttribute("document", document);
-		for (EmployeeRefDocuments dc : document) {
-			System.out.println(dc.getDocName());
-		}
+		// for (EmployeeRefDocuments dc : document) {
+		// System.out.println(dc.getDocName());
+		// }
 		return "documentlist";
 	}
 
@@ -61,8 +62,9 @@ public class ReferenceController {
 	}
 
 	@RequestMapping(value = "/deleteReferenceDocument", method = RequestMethod.POST)
-	public String deleteReferenceDocument(@PathVariable("id") String id, Model model) {
-		rs.deleteReferenceDocument(id);
-		return "documentlist";
+	public String deleteReferenceDocument(@RequestParam("documentId") String documentId, Model model) {
+		rs.deleteReferenceDocument(documentId);
+		return "documentList";
 	}
+
 }
