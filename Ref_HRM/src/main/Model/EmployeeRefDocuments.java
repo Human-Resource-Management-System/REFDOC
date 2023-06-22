@@ -57,8 +57,8 @@ public class EmployeeRefDocuments {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescription(String filePath) {
+		this.description = filePath;
 	}
 
 	public Date getLastUpdatedDate() {

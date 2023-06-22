@@ -62,7 +62,13 @@
    <bean id="rs" class="main.Service.ReferenceService" />
    <bean id="document" class = "main.Model.EmployeeRefDocuments"/>
    
-     
+   
+<!-- For XML-based configuration -->
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxUploadSize" value="5242880"/> <!-- 5MB -->   <!-- Set maximum allowed file size (in bytes) -->
+    <property name="maxUploadSizePerFile" value="5242880"/> <!-- 5MB --><!-- Set maximum request size (in bytes) -->
+</bean>
+
     <!-- EntityManager configuration -->
     <bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
         <property name="entityManagerFactory" ref="entityManagerFactory" />

@@ -1,17 +1,17 @@
 package main.Model;
 
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 public class DocumentInputModel {
 	private String docname;
 	private String category;
-	private File documentData;
+	private MultipartFile documentData;
 
 	public DocumentInputModel() {
 
 	}
 
-	public DocumentInputModel(String docname, String category, File documentData) {
+	public DocumentInputModel(String docname, String category, MultipartFile documentData) {
 		this.docname = docname;
 		this.category = category;
 		this.documentData = documentData;
@@ -33,11 +33,11 @@ public class DocumentInputModel {
 		this.category = category;
 	}
 
-	public File getDocumentData() {
+	public MultipartFile getDocumentData() {
 		return documentData;
 	}
 
-	public void setDocumentData(File documentData) {
+	public void setDocumentData(MultipartFile documentData) {
 		this.documentData = documentData;
 	}
 }
