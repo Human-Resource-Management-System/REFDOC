@@ -77,7 +77,7 @@
  <div class="form-container">
     <h1>Upload Document</h1>
 
-  <form action="DocumentSave" method="POST" enctype="multipart/form-data">
+  <form action="DocumentSave" method="POST" >
     <div class="form-group">
       <label for="docname">Document Name:</label>
       <input type="text" id="docname" name="docname" required>
@@ -86,22 +86,17 @@
     <div class="form-group">
       <label for="category">Category:</label>
       <select id="category" name="category">
-        <option value="employee-handbook">Employee Handbook</option>
-        <option value="code-of-conduct">Code of Conduct</option>
-        <option value="anti-harassment-policy">Anti-Harassment Policy</option>
-        <option value="it-security-policy">IT Security Policy</option>
-        <option value="travel-expense-policy">Travel and Expense Policy</option>
+        <option value="Employee Handbook">Employee Handbook</option>
+        <option value="Code of Conduct">Code of Conduct</option>
+        <option value="Anti Harassment Policy">Anti Harassment Policy</option>
+        <option value="IT Security Policy">IT Security Policy</option>
+        <option value="Travel and Expense Policy">Travel and Expense Policy</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label for="description">Description:</label>
-      <textarea id="description" name="description"></textarea>
-    </div>
-
-    <div class="form-group">
       <label for="file-upload">Upload Document:</label>
-      <input type="file" id="file-upload" name="document" required>
+      <input type="file" id="file-upload" name="documentData" required>
     </div>
 
     <input class="submit-button" type="submit" value="Upload">
@@ -114,10 +109,8 @@
 
       const docName = document.getElementById('docName').value;
       const category = document.getElementById('category').value;
-      const description = document.getElementById('description').value;
-      //const fileInput = document.getElementById('file-upload');
- 	  //const file = fileInput.files[0];
-
+      const documentData = document.getElementById('documentData').value;
+  
       if (!docName || !category || !file) {
         alert('Please fill in all the required fields and upload a document.');
         return;
@@ -126,7 +119,7 @@
       const formData = new FormData();
       formData.append('docName', docName);
       formData.append('category', category);
-      formData.append('description', description);
+      formData.append('documentData', documentData);
    //   formData.append('document', file);
       
       fetch('/DocumentSave', {

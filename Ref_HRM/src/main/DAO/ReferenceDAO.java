@@ -44,4 +44,12 @@ public class ReferenceDAO implements ReferenceInterface {
 		String query = "SELECT doc FROM EmployeeRefDocuments doc";
 		return entityManager.createQuery(query).getResultList();
 	}
+
+	@Override
+	public int getIndex() {
+		String query = "SELECT MAX(doc.id) FROM EmployeeRefDocuments doc";
+		Integer maxId = entityManager.createQuery(query, Integer.class).getSingleResult();
+		return maxId != null ? maxId + 1 : 1;
+	}
+
 }

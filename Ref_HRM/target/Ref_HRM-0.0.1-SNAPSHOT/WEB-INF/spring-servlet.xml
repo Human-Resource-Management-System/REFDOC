@@ -60,6 +60,7 @@
  
    <bean id="rd" class="main.DAO.ReferenceDAO" />
    <bean id="rs" class="main.Service.ReferenceService" />
+   <bean id="document" class = "main.Model.EmployeeRefDocuments"/>
    
      
     <!-- EntityManager configuration -->

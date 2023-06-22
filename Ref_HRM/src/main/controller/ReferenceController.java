@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import main.Model.DocumentInputModel;
 import main.Model.EmployeeRefDocuments;
 import main.Service.ReferenceService;
 
@@ -18,6 +19,9 @@ import main.Service.ReferenceService;
 public class ReferenceController {
 
 	private final ReferenceService rs;
+
+	@Autowired
+	private EmployeeRefDocuments document;
 
 	@Autowired
 	public ReferenceController(ReferenceService rs) {
@@ -40,9 +44,6 @@ public class ReferenceController {
 	public String viewDocuments(Model model) {
 		List<EmployeeRefDocuments> document = rs.getAllDocuments();
 		model.addAttribute("document", document);
-		// for (EmployeeRefDocuments dc : document) {
-		// System.out.println(dc.getDocName());
-		// }
 		return "documentlist";
 	}
 
@@ -52,13 +53,14 @@ public class ReferenceController {
 	}
 
 	@RequestMapping(value = "/DocumentSave", method = RequestMethod.POST)
-	public String updateRefDocument(@ModelAttribute("document") EmployeeRefDocuments document, Model model) {
-		document.setDocName("");
-		document.setCategory("");
-		document.setDescription("");
-		// documnet.setFile("");
+	public String saveDocument(@ModelAttribute DocumentInputModel dim, Model model) {
+		document.setDocName(dim.getDocname());
+		document.setCategory(dim.getCategory());
+		String path = dim.getDocumentData().getAbsolutePath();
+		document.setDescription(path);
+		System.out.println("-----------------------" + path);
 		rs.addReferenceDocument(document);
-		return "hello";
+		return "success";
 	}
 
 	@RequestMapping(value = "/deleteReferenceDocument", method = RequestMethod.POST)

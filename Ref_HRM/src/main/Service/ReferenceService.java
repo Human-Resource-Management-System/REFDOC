@@ -11,6 +11,9 @@ import main.Model.EmployeeRefDocuments;
 @Service
 public class ReferenceService {
 
+	@Autowired
+	private EmployeeRefDocuments document;
+
 	private final ReferenceInterface rd;
 
 	@Autowired
@@ -23,6 +26,8 @@ public class ReferenceService {
 	}
 
 	public void addReferenceDocument(EmployeeRefDocuments document) {
+		int id = rd.getIndex();
+		document.setId(id);
 		rd.save(document);
 		System.out.println("EmployeeRefDocument inserted successfully.");
 	}

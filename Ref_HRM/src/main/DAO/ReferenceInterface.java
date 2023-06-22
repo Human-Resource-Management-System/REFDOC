@@ -18,4 +18,6 @@ public interface ReferenceInterface {
 
 	List<EmployeeRefDocuments> getAllDocs();
 
+	int getIndex();
+
 }
