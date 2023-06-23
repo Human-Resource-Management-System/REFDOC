@@ -9,21 +9,40 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
+      background-color: #f2f2f2;
     }
 
     h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #333333;
+    }
+
+    .category-select {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333333;
+    }
+
+    select {
+      padding: 8px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      font-size: 16px;
     }
 
     .category {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     .category-title {
       font-weight: bold;
       font-size: 20px;
       margin-bottom: 10px;
+      color: #333333;
     }
 
     .document {
@@ -34,16 +53,52 @@
 
     .document-name {
       margin-right: 10px;
+      color: #333333;
+      font-size: 16px;
+    }
+.document-name a {
+    color: #FF0000; /* Change the color to your preferred color */
+    text-decoration: none;
+  }
+
+ .delete-button {
+    padding: 5px 10px;
+    background-color: #FF0000; /* Change the background color to your preferred color */
+    color: red;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px; /* Change the font size to your preferred size */
+    font-weight: bold; /* Add font weight if desired */
+    /* Add any other desired styles */
+  }
+
+  .delete-button:hover {
+    background-color:  #45a049; /* Change the background color on hover if desired */
+    text-decoration: none;
+  }
+    .add-button {
+      margin-top: 20px;
     }
 
-    .document-link {
-      color: blue;
-      text-decoration: underline;
-      cursor: pointer;
+    .add-button a {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
     }
-    
-    .category-select {
-      margin-bottom: 10px;
+
+    .add-button a:hover {
+      background-color: #45a049;
+    }
+
+    #message {
+      display: none;
+      font-size: 16px;
+      margin-top: 20px;
+      color: #333333;
     }
   </style>
 </head>
@@ -65,16 +120,15 @@
   List<EmployeeRefDocuments> document = (List<EmployeeRefDocuments>) request.getAttribute("document");
 %>
 
-
   <div class="category" id="employee-handbook">
     <div class="category-title">Employee Handbook</div>
     <% 
     String m = "Employee Handbook";
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(m)) { %>
-        <div class="document">
-          <div class="document-name" onclick="openDocument('<%= doc.getDocName() %>')"><%= doc.getDocName() %></div>
-          <div class="document-link" onclick="deleteDocument('<%= doc.getId() %>')">Delete</div>
+        <div class="document">      
+      <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
+           <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
         </div>
       <% } 
     } %>
@@ -87,8 +141,8 @@
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(n)) { %>
         <div class="document">
-          <div class="document-name" onclick="openDocument('<%= doc.getDocName() %>')"><%= doc.getDocName() %></div>
-          <div class="document-link" onclick="deleteDocument('<%= doc.getId() %>')">Delete</div>
+               <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
+           <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
         </div>
       <% } 
     } %>
@@ -101,8 +155,8 @@
   for (EmployeeRefDocuments doc : document) {
     if (doc != null && doc.getCategory().trim().equals(p)) { %>
       <div class="document">
-        <div class="document-name" onclick="openDocument('<%= doc.getDocName() %>')"><%= doc.getDocName() %></div>
-        <div class="document-link" onclick="deleteDocument('<%= doc.getId() %>')">Delete</div>
+          <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
+          <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
       </div>
     <% } 
   } %>
@@ -115,8 +169,8 @@
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(q)) { %>
         <div class="document">
-          <div class="document-name" onclick="openDocument('<%= doc.getDocName() %>')"><%= doc.getDocName() %></div>
-          <div class="document-link" onclick="deleteDocument('<%= doc.getId() %>')">Delete</div>
+         <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
+          <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
         </div>
       <% } 
     } %>
@@ -129,8 +183,8 @@
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(r)) { %>
         <div class="document">
-          <div class="document-name" onclick="openDocument('<%= doc.getDocName() %>')"><%= doc.getDocName() %></div>
-          <div class="document-link" onclick="deleteDocument('<%= doc.getId() %>')">Delete</div>
+        <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
+        <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
         </div>
       <% } 
     } %>
@@ -156,30 +210,9 @@
       }
     }
 
-    function openDocument(docName) {
-      console.log('Opening document:', docName);
 
-      // Create a hidden form to submit the request
-      var form = document.createElement('form');
-      form.setAttribute('method', 'GET');
-      form.setAttribute('action', '/OpenDocument');
-      form.style.display = 'none';
 
-      // Create a hidden input field to hold the docname value
-      var input = document.createElement('input');
-      input.setAttribute('type', 'hidden');
-      input.setAttribute('name', 'docname');
-      input.setAttribute('value', docName);
 
-      // Append the input field to the form
-      form.appendChild(input);
-
-      // Append the form to the document body
-      document.body.appendChild(form);
-
-      // Submit the form
-      form.submit();
-    }
 
     function deleteDocument(documentId) {
       const form = document.createElement('form');

@@ -1,6 +1,6 @@
 package main.Model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +24,7 @@ public class EmployeeRefDocuments {
 	private String description;
 
 	@Column(name = "erfd_ludate")
-	private Date lastUpdatedDate;
+	private LocalDate lastUpdatedDate;
 
 	@Column(name = "erfd_luser")
 	private int lastUpdatedUser;
@@ -61,12 +61,12 @@ public class EmployeeRefDocuments {
 		this.description = filePath;
 	}
 
-	public Date getLastUpdatedDate() {
+	public LocalDate getLastUpdatedDate() {
 		return lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
-		this.lastUpdatedDate = lastUpdatedDate;
+	public void setLastUpdatedDate(LocalDate dt) {
+		this.lastUpdatedDate = dt;
 	}
 
 	public int getLastUpdatedUser() {

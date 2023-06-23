@@ -1,9 +1,12 @@
 package main.Model;
 
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class DocumentInputModel {
-	private String docname;
+
+	@NotEmpty
 	private String category;
 	private MultipartFile documentData;
 
@@ -11,20 +14,13 @@ public class DocumentInputModel {
 
 	}
 
-	public DocumentInputModel(String docname, String category, MultipartFile documentData) {
-		this.docname = docname;
+	public DocumentInputModel(String category, MultipartFile documentData) {
+
 		this.category = category;
 		this.documentData = documentData;
 	}
 
-	public String getDocname() {
-		return docname;
-	}
-
-	public void setDocname(String docname) {
-		this.docname = docname;
-	}
-
+	@NotEmpty
 	public String getCategory() {
 		return category;
 	}

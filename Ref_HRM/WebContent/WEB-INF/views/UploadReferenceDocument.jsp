@@ -77,11 +77,8 @@
  <div class="form-container">
     <h1>Upload Document</h1>
 
-  <form action="DocumentSave" method="POST" >
-    <div class="form-group">
-      <label for="docname">Document Name:</label>
-      <input type="text" id="docname" name="docname" required>
-    </div>
+<form id="document-form"  >
+  
 
     <div class="form-group">
       <label for="category">Category:</label>
@@ -107,22 +104,19 @@
     form.addEventListener('submit', function(event) {
       event.preventDefault();
 
-      const docName = document.getElementById('docName').value;
       const category = document.getElementById('category').value;
-      const documentData = document.getElementById('documentData').value;
+      const documentData = document.getElementById('file-upload').files[0];
   
-      if (!docName || !category || !file) {
+      if (!category || !documentData) {
         alert('Please fill in all the required fields and upload a document.');
         return;
       }
 
       const formData = new FormData();
-      formData.append('docName', docName);
       formData.append('category', category);
       formData.append('documentData', documentData);
-   //   formData.append('document', file);
       
-      fetch('/DocumentSave', {
+      fetch('DocumentSave', {
         method: 'POST',
         body: formData
       })

@@ -1,20 +1,20 @@
 package main.controller;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,27 +24,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import main.Model.DocumentInputModel;
 import main.Model.EmployeeRefDocuments;
-import main.Service.ReferenceService;
-
-// ...
+import main.Service.ReferenceServiceInterface;
 
 @Controller
 public class ReferenceController {
-
-	private final ReferenceService rs;
+	@Autowired
+	private ReferenceServiceInterface rs;// service interface
 
 	@Autowired
-	private EmployeeRefDocuments document;
-
-	@Autowired
-	public ReferenceController(ReferenceService rs) {
-		this.rs = rs;
-	}
+	private EmployeeRefDocuments document;// Entity model class
 
 	@RequestMapping(value = "/viewReferenceDocument/{id}", method = RequestMethod.POST)
-	/// {id} will map the id variable from the URL to the id parameter of the method
+	// {id} will map the id variable from the URL to the id parameter of the method
 	public String viewReferenceDocument(@PathVariable("id") String id, Model model) {
-		EmployeeRefDocuments document = rs.getReferenceDocumentById(id);
+		document = rs.getReferenceDocumentById(id);
 		if (document != null) {
 			model.addAttribute("document", document);
 		} else {
@@ -66,84 +59,91 @@ public class ReferenceController {
 	}
 
 	@RequestMapping(value = "/DocumentSave", method = RequestMethod.POST)
-	public String saveDocument(@ModelAttribute DocumentInputModel dim, Model model) {
-		// Create a new instance of EmployeeRefDocuments
+	public String saveDocument(@ModelAttribute DocumentInputModel dim, Model model, HttpServletRequest req) {
 		EmployeeRefDocuments document = new EmployeeRefDocuments();
-
-		document.setDocName(dim.getDocname());
+		MultipartFile documentData = dim.getDocumentData();
+		String Docname = documentData.getOriginalFilename();// Extract the file name from the MultipartFile
+		document.setDocName(Docname);
 		document.setCategory(dim.getCategory());
 
-		MultipartFile documentData = dim.getDocumentData();
+		System.out.println("start");
+
 		if (documentData != null && !documentData.isEmpty()) {
 			try {
-				// Get the file name
-				String fileName = StringUtils.cleanPath(documentData.getOriginalFilename());
 
-				// Set the file path where the document will be saved
-				String filePath = "Files/" + fileName; // this path according to your project structure
+				System.out.println("setting path");
 
-				// Save the document to the specified file path
-				byte[] documentBytes = documentData.getBytes();
-				Path path = Paths.get(filePath);
-				Files.write(path, documentBytes);
+				byte[] documentBytes = documentData.getBytes();// Save the document to the specified file path
+				String path = req.getServletContext().getRealPath("/") + "WEB-INF" + File.separator + "views"
+						+ File.separator + "Files" + File.separator + dim.getDocumentData().getOriginalFilename();
 
-				// Set the description as the file path
-				document.setDescription(filePath);
+				System.out.println(path);
 
-				// Add the document to the database
-				rs.addReferenceDocument(document);
+				document.setDescription(path);// Set the description as the file path
+				FileOutputStream fos = new FileOutputStream(path);
+				fos.write(documentBytes);
+				fos.close();
 
-				// Display success message
-				model.addAttribute("message", "Document uploaded successfully!");
+				System.out.println("File uploaded successfully");
+
+				rs.addReferenceDocument(document);// Add the document to the database
+
+				model.addAttribute("message", "Document uploaded successfully!");// Display success message
 			} catch (IOException e) {
-				// Handle the exception
-				model.addAttribute("error", "Failed to upload the document!");
+				model.addAttribute("error", "Failed to upload the document!");// Handle the exception
 			}
 		} else {
-			// Handle the case when no document is uploaded
-			model.addAttribute("error", "No document found to upload!");
+			model.addAttribute("error", "No document found to upload!");// Handle the case when no document is uploaded
 		}
-
+		System.out.println("success");
 		return "success";
 	}
 
 	@RequestMapping(value = "/OpenDocument", method = RequestMethod.GET)
-	public void openDocument(@RequestParam("docname") String docname, HttpServletResponse response) {
+	public void openDocument(@RequestParam("docname") String docname, HttpServletResponse response,
+			HttpServletRequest request) {
 		// Construct the file path based on the selected docname
-		String filePath = "Files/" + docname; // Update the path based on your project structure
+		String filePath = request.getServletContext().getRealPath("/") + "WEB-INF" + File.separator + "views"
+				+ File.separator + "Files" + File.separator + docname;
+
+		System.out.println(filePath);
 
 		try {
-			// Set the content type based on the file extension
-			String mimeType = URLConnection.guessContentTypeFromName(docname);
-			response.setContentType(mimeType);
+			File file = new File(filePath);
+			System.out.println("In here");
 
-			// Set the content disposition to "inline" to open the file in the browser
-			response.setHeader("Content-Disposition", "inline; filename=\"" + docname + "\"");
+			if (file.exists()) {
+				String contentType = request.getServletContext().getMimeType(docname);
+				response.setContentType(contentType);
+				response.setHeader("Content-Disposition", "inline; filename=\"" + docname + "\"");
 
-			// Read the file from the specified path
-			FileInputStream fileInputStream = new FileInputStream(filePath);
-			OutputStream outputStream = response.getOutputStream();
+				InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+				OutputStream outputStream = response.getOutputStream();
 
-			// Write the file content to the response output stream
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, bytesRead);
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+
+				inputStream.close();
+				outputStream.flush();
+				outputStream.close();
+
+			} else {
+				System.out.println("No File exists");
 			}
-
-			// Close the streams
-			fileInputStream.close();
-			outputStream.close();
 		} catch (IOException e) {
 			// Handle the exception
 			e.printStackTrace();
 		}
 	}
 
-	@RequestMapping(value = "/deleteReferenceDocument", method = RequestMethod.POST)
-	public String deleteReferenceDocument(@RequestParam("documentId") String documentId, Model model) {
-		rs.deleteReferenceDocument(documentId);
+	@RequestMapping(value = "/deleteReferenceDocument", method = RequestMethod.GET)
+	public String deleteReferenceDocument(@RequestParam("docname") String docname, Model model,
+			HttpServletRequest request) {
+		System.out.println("going to delete");
+		rs.deleteReferenceDocument(docname);
 		return "documentList";
 	}
-
 }
