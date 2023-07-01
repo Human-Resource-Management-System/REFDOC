@@ -10,7 +10,7 @@ import main.Model.EmployeeRefDocuments;
 @Repository
 public interface ReferenceDocumentDAOInterface {
 
-	EmployeeRefDocuments findById(String id);
+	EmployeeRefDocuments findById(int id);
 
 	void save(EmployeeRefDocuments document);
 

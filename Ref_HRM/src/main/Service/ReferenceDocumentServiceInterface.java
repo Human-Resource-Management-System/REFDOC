@@ -6,7 +6,7 @@ import main.Model.EmployeeRefDocuments;
 
 public interface ReferenceDocumentServiceInterface {
 
-	public EmployeeRefDocuments getReferenceDocumentById(String id);
+	public EmployeeRefDocuments getReferenceDocumentById(int id);
 
 	public void addReferenceDocument(EmployeeRefDocuments document);
 

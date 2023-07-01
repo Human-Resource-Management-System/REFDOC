@@ -23,7 +23,7 @@ public class ReferenceDocumentDAOImpl implements ReferenceDocumentDAOInterface {
 
 	@Override
 	@Transactional
-	public EmployeeRefDocuments findById(String id) {
+	public EmployeeRefDocuments findById(int id) {
 		logger.info("Finding document by id: {}", id);
 		return entityManager.find(EmployeeRefDocuments.class, id);
 	}

@@ -21,7 +21,7 @@ public class ReferenceDocumentServiceImpl implements ReferenceDocumentServiceInt
 	@Autowired
 	private ReferenceDocumentDAOInterface rd;// DAO interface
 
-	public EmployeeRefDocuments getReferenceDocumentById(String id) {
+	public EmployeeRefDocuments getReferenceDocumentById(int id) {
 		logger.info("Getting reference document by id: {}", id);
 
 		return rd.findById(id);
