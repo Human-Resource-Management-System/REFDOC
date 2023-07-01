@@ -58,8 +58,8 @@
 	
     <!-- Dependency Injection Configuration -->
  
-   <bean id="rd" class="main.DAO.ReferenceDAOImpl" />
-   <bean id="rs" class="main.Service.ReferenceServiceImpl" />
+   <bean id="rd" class="main.DAO.ReferenceDocumentDAOImpl" />
+   <bean id="rs" class="main.Service.ReferenceDocumentServiceImpl" />
    <bean id="document" class = "main.Model.EmployeeRefDocuments"/>
    
    

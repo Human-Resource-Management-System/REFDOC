@@ -3,27 +3,32 @@ package main.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.DAO.ReferenceDAOInterface;
+import main.DAO.ReferenceDocumentDAOInterface;
 import main.Model.EmployeeRefDocuments;
 
 @Service
-public class ReferenceServiceImpl implements ReferenceServiceInterface {
+public class ReferenceDocumentServiceImpl implements ReferenceDocumentServiceInterface {
 
 	@Autowired
 	private EmployeeRefDocuments document;// entity model class
+	private static final Logger logger = LoggerFactory.getLogger(ReferenceDocumentServiceImpl.class);
 
 	@Autowired
-	private ReferenceDAOInterface rd;// DAO interface
+	private ReferenceDocumentDAOInterface rd;// DAO interface
 
 	public EmployeeRefDocuments getReferenceDocumentById(String id) {
+		logger.info("Getting reference document by id: {}", id);
+
 		return rd.findById(id);
 	}
 
 	public void addReferenceDocument(EmployeeRefDocuments document) {
-
+		logger.info("Adding reference document");
 		int id = rd.getIndex();// to know last id in the db
 		document.setId(id);
 
@@ -37,12 +42,14 @@ public class ReferenceServiceImpl implements ReferenceServiceInterface {
 	}
 
 	public void deleteReferenceDocument(String docname) {
-		int id = rd.getIndex();// to know last id in the db
-		document.setId(id);
+		logger.info("Deleting reference document: {}", docname);
+		int id = rd.getDOCIndex(docname);// to know id in the db
+		// document.setId(id);
 		rd.deleteById(id);
 	}
 
 	public List<EmployeeRefDocuments> getAllDocuments() {
+		logger.info("Retrieving all documents");
 		return rd.getAllDocs();
 	}
 }

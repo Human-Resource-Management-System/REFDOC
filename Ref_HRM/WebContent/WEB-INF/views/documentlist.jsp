@@ -62,21 +62,24 @@
   }
 
  .delete-button {
-    padding: 5px 10px;
-    background-color: #FF0000; /* Change the background color to your preferred color */
-    color: red;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px; /* Change the font size to your preferred size */
-    font-weight: bold; /* Add font weight if desired */
-    /* Add any other desired styles */
-  }
+  background-color: red;
+  color: white;
+}
 
-  .delete-button:hover {
-    background-color:  #45a049; /* Change the background color on hover if desired */
-    text-decoration: none;
-  }
+.delete-button:hover {
+  background-color: #ff3333; /* Change the background color on hover if desired */
+  text-decoration: none;
+}
+
+.view-button {
+  background-color: #000080; /* Dark blue color */
+  color: white;
+}
+
+.view-button:hover {
+  background-color: #000066; /* Darker shade of blue on hover */
+  text-decoration: none;
+}
     .add-button {
       margin-top: 20px;
     }
@@ -117,7 +120,7 @@
   </div>
 
 <%
-  List<EmployeeRefDocuments> document = (List<EmployeeRefDocuments>) request.getAttribute("document");
+  List<EmployeeRefDocuments> document = (List<EmployeeRefDocuments>) request.getAttribute("refdocs");
 %>
 
   <div class="category" id="employee-handbook">
@@ -127,8 +130,13 @@
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(m)) { %>
         <div class="document">      
-      <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
-           <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
+      <div class="document-name">
+            <%= doc.getDocName() %>
+          </div>
+          <div class="document-actions">
+            <button class="view-button" onclick="location.href='OpenDocument?docname=<%= doc.getDocName() %>'">View</button>
+            <button class="delete-button" onclick="location.href='deleteReferenceDocument?docname=<%= doc.getDocName() %>'">Delete</button>
+          </div>
         </div>
       <% } 
     } %>
@@ -141,10 +149,14 @@
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(n)) { %>
         <div class="document">
-               <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
-           <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
-        </div>
-      <% } 
+               <div class="document-name">
+            <%= doc.getDocName() %>
+          </div>
+          <div class="document-actions">
+            <button class="view-button" onclick="location.href='OpenDocument?docname=<%= doc.getDocName() %>'">View</button>
+            <button class="delete-button" onclick="location.href='deleteReferenceDocument?docname=<%= doc.getDocName() %>'">Delete</button>
+          </div>
+        </div> <% } 
     } %>
   </div>
 
@@ -155,9 +167,14 @@
   for (EmployeeRefDocuments doc : document) {
     if (doc != null && doc.getCategory().trim().equals(p)) { %>
       <div class="document">
-          <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
-          <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
-      </div>
+         <div class="document-name">
+            <%= doc.getDocName() %>
+          </div>
+          <div class="document-actions">
+            <button class="view-button" onclick="location.href='OpenDocument?docname=<%= doc.getDocName() %>'">View</button>
+            <button class="delete-button" onclick="location.href='deleteReferenceDocument?docname=<%= doc.getDocName() %>'">Delete</button>
+          </div>
+        </div>
     <% } 
   } %>
 </div>
@@ -169,8 +186,13 @@
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(q)) { %>
         <div class="document">
-         <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
-          <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
+          <div class="document-name">
+            <%= doc.getDocName() %>
+          </div>
+          <div class="document-actions">
+            <button class="view-button" onclick="location.href='OpenDocument?docname=<%= doc.getDocName() %>'">View</button>
+            <button class="delete-button" onclick="location.href='deleteReferenceDocument?docname=<%= doc.getDocName() %>'">Delete</button>
+          </div>
         </div>
       <% } 
     } %>
@@ -183,12 +205,18 @@
     for (EmployeeRefDocuments doc : document) {
       if (doc != null && doc.getCategory().equals(r)) { %>
         <div class="document">
-        <a href="OpenDocument?docname=<%= doc.getDocName() %>"><%= doc.getDocName() %></a>&nbsp;&nbsp;
-        <a href="deleteReferenceDocument?docname=<%= doc.getDocName() %>">Delete</a>
+          <div class="document-name">
+            <%= doc.getDocName() %>
+          </div>
+          <div class="document-actions">
+            <button class="view-button" onclick="location.href='OpenDocument?docname=<%= doc.getDocName() %>'">View</button>
+            <button class="delete-button" onclick="location.href='deleteReferenceDocument?docname=<%= doc.getDocName() %>'">Delete</button>
+          </div>
         </div>
       <% } 
     } %>
   </div>
+  
 
   <div class="add-button">
     <a href="addReferenceDocument">Add Document</a>
@@ -209,9 +237,6 @@
         }
       }
     }
-
-
-
 
 
     function deleteDocument(documentId) {

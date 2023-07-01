@@ -4,7 +4,7 @@ import java.util.List;
 
 import main.Model.EmployeeRefDocuments;
 
-public interface ReferenceServiceInterface {
+public interface ReferenceDocumentServiceInterface {
 
 	public EmployeeRefDocuments getReferenceDocumentById(String id);
 
